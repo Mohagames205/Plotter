@@ -1,0 +1,6 @@
+---
+name: Plotter
+version: 0.0.1
+main: Mohamed205\Plotter\Main
+api: 3.15.1
+...
