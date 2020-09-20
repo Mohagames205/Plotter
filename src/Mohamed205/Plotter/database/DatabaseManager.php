@@ -30,6 +30,7 @@ class DatabaseManager
                 plot_max_members INTEGER DEFAULT 10,
                 plot_price INTEGER DEFAULT NULL,
                 plot_is_sold INTEGER DEFAULT 1,
+                plot_billing_period INTEGER DEFAULT NULL,
                 plot_type TEXT NOT NULL,
                 plot_world TEXT,
                 plot_x1 INTEGER, 
