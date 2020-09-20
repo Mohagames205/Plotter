@@ -36,12 +36,12 @@ class PlotCreateSession extends Session
 
     public function getMinLocation() : Vector3
     {
-        $this->calculateMinLocation($this->firstLocation, $this->secondLocation);
+        return $this->calculateMinLocation($this->firstLocation, $this->secondLocation);
     }
 
     public function getMaxLocation() : Vector3
     {
-        $this->calculateMaxLocation($this->firstLocation, $this->secondLocation);
+        return $this->calculateMaxLocation($this->firstLocation, $this->secondLocation);
     }
 
     public function isReady() : bool
