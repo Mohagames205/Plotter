@@ -4,9 +4,12 @@
 namespace Mohamed205\Plotter\command;
 
 
+use CortexPE\Commando\BaseSubCommand;
+use Mohamed205\Plotter\Main;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 
-class PlotWandCommand extends \CortexPE\Commando\BaseSubCommand
+class PlotWandCommand extends BaseSubCommand
 {
 
     /**
@@ -14,11 +17,13 @@ class PlotWandCommand extends \CortexPE\Commando\BaseSubCommand
      */
     protected function prepare(): void
     {
-        // TODO: Implement prepare() method.
+        $this->setPermission("plotter.admin.wand");
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
-        // TODO: Implement onRun() method.
+        /** @var Player $sender */
+        $sender->getInventory()->addItem(Main::getItemHelper()->getWandItem());
+        $sender->sendMessage("§au U heeft succesvol een wand ontvangen!");
     }
 }
