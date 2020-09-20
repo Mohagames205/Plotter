@@ -11,7 +11,7 @@ abstract class Session
 {
     use Math;
 
-    protected static array $sessions;
+    public static array $sessions;
 
     protected static function registerSession(Player $player, Session $session)
     {
