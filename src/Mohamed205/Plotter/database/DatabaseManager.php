@@ -18,7 +18,6 @@ class DatabaseManager
         $this->plugin = $plugin;
     }
 
-
     public function initDatabase()
     {
         $database = new SQLite3($this->getPlugin()->getDataFolder() . "Plotter.db");
@@ -26,10 +25,13 @@ class DatabaseManager
             CREATE TABLE IF NOT EXISTS plots(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 plot_name TEXT, 
-                plot_owner TEXT, 
+                plot_owner TEXT DEFAULT NULL, 
                 plot_members TEXT,
-                plot_word TEXT,
-                max_members INTEGER,
+                plot_max_members INTEGER DEFAULT 10,
+                plot_price INTEGER DEFAULT NULL,
+                plot_is_sold INTEGER DEFAULT 1,
+                plot_type TEXT NOT NULL,
+                plot_world TEXT,
                 plot_x1 INTEGER, 
                 plot_y1 INTEGER, 
                 plot_z1 INTEGER, 
