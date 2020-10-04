@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Mohamed205\Plotter\command;
+namespace Mohamed205\Plotter\command\PlotSubCommand;
 
 
 use CortexPE\Commando\BaseSubCommand;

@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Mohamed205\Plotter\command;
+namespace Mohamed205\Plotter\command\PlotSubCommand;
 
 
 use CortexPE\Commando\args\RawStringArgument;
+use Mohamed205\Plotter\plot\BasicPlot;
 use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\plot\RentPlot;
 use Mohamed205\Plotter\session\PlotCreateSession;
@@ -30,7 +31,7 @@ class PlotCreateCommand extends \CortexPE\Commando\BaseSubCommand
 
         if($session->isReady())
         {
-            Plot::create($args["plot_name"], $session->getMinLocation(), $session->getMaxLocation(), $sender->getLevel(), RentPlot::class);
+            Plot::create($args["plot_name"], $session->getMinLocation(), $session->getMaxLocation(), $sender->getLevel(), BasicPlot::class);
         }
     }
 }

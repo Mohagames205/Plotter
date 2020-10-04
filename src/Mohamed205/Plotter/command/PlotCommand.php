@@ -7,6 +7,11 @@ namespace Mohamed205\Plotter\command;
 use CortexPE\Commando\args\BaseArgument;
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotAddMemberCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotCreateCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotRemoveMemberCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotSetOwnerCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotWandCommand;
 use pocketmine\command\CommandSender;
 
 class PlotCommand extends BaseCommand
