@@ -8,6 +8,7 @@ use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
+use pocketmine\Server;
 
 class PlotRemoveMemberCommand extends BaseSubCommand
 {
