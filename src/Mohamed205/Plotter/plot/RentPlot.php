@@ -15,12 +15,12 @@ class RentPlot extends Plot
     private bool $isSold;
 
 
-    public function __construct(string $name, ?Member $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?int $price, bool $isSold, int $billingPeriod)
+    public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, int $maxMembers, ?int $price, bool $isSold, int $billingPeriod)
     {
         $this->price = $price;
         $this->isSold = $isSold;
 
-        parent::__construct($name, $owner, $members, $minVector, $maxVector, $level);
+        parent::__construct($name, $owner, $members, $minVector, $maxVector, $level, $category, $maxMembers);
 
     }
 

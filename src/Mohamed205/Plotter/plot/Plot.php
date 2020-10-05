@@ -27,8 +27,9 @@ abstract class Plot
     private ?string $category;
 
     private array $members;
+    private int $maxMembers;
 
-    public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, ...$args)
+    public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, int $maxMembers, ...$args)
     {
         $this->name = $name;
         $this->owner = $owner;
@@ -39,6 +40,8 @@ abstract class Plot
         $this->level = $level;
 
         $this->category = $category;
+
+        $this->maxMembers = $maxMembers;
 
         $this->id = $this->fetchId();
     }
@@ -239,6 +242,9 @@ abstract class Plot
         $statement->bindParam("id", $id);
         $statement->bindParam("members", $databaseMembers);
         $statement->execute();
+        $statement->close();
+
+        return true;
     }
 
     public function isMember(string $member)
@@ -252,7 +258,19 @@ abstract class Plot
      */
     public function getMaxMembers() : int
     {
+        return $this->maxMembers;
+    }
 
+    public function setMaxMembers(int $amount) : void
+    {
+        $id = $this->getId();
+
+        $connection = DatabaseManager::getConnection();
+        $statement = $connection->prepare("UPDATE plots SET plot_max_members = :max WHERE id = :id");
+        $statement->bindParam("id", $id);
+        $statement->bindParam("max", $amount);
+        $statement->execute();
+        $statement->close();
     }
 
     public function removeMember(string $member) : bool
@@ -322,7 +340,7 @@ abstract class Plot
         $jsonMembers = json_decode($result["plot_members"], true);
 
         /** @var Plot $plotType */;
-        return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_price"], $result["plot_is_sold"], $result["plot_billing_period"]);
+        return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_max_members"], $result["plot_price"], $result["plot_is_sold"], $result["plot_billing_period"]);
 
     }
 
