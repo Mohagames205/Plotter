@@ -181,7 +181,7 @@ abstract class Plot
 
 
         $result = $statement->execute()->fetchArray(SQLITE3_ASSOC);
-        $conn->close();
+        $statement->close();
 
         return $result["id"];
     }
@@ -225,7 +225,9 @@ abstract class Plot
 
     public function addMember(string $member) : bool
     {
-        if(!Server::getInstance()->hasOfflinePlayerData($member))
+
+
+        if(count($this->getMembers()) >= $this->getMaxMembers() || !Server::getInstance()->hasOfflinePlayerData($member))
         {
             return false;
         }
@@ -254,7 +256,6 @@ abstract class Plot
 
     /**
      * @return int
-     * TODO: Dit afmaken
      */
     public function getMaxMembers() : int
     {
@@ -304,7 +305,7 @@ abstract class Plot
         $statement->execute();
     }
 
-    public function getCategory() : string
+    public function getCategory() : ?string
     {
         return $this->category;
     }
@@ -314,7 +315,7 @@ abstract class Plot
         $id = $this->getId();
 
         $conn = DatabaseManager::getConnection();
-        $statement = $conn->prepare("UPDATE plots SET plot_category = :cat WHERE plot_id = :plot_id");
+        $statement = $conn->prepare("UPDATE plots SET plot_category = :cat WHERE id = :id");
         $statement->bindParam("id", $id);
         $statement->bindParam("cat", $category);
         $statement->execute();
