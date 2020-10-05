@@ -9,6 +9,7 @@ use CortexPE\Commando\BaseSubCommand;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class PlotSetOwnerCommand extends BaseSubCommand
 {
@@ -35,7 +36,7 @@ class PlotSetOwnerCommand extends BaseSubCommand
             return;
         }
 
-        $plot->addMember($args["owner"]);
-        $sender->sendMessage("§aDe speler is nu eigenaar van de server");
+        $plot->setOwner($args["owner"]);
+        $sender->sendMessage("§aDe speler is nu eigenaar van het plot");
     }
 }

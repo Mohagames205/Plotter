@@ -20,8 +20,8 @@ class DatabaseManager
 
     public function initDatabase()
     {
-        $database = new SQLite3($this->getPlugin()->getDataFolder() . "Plotter.db");
-        $database->query("
+        self::$connection = new SQLite3($this->getPlugin()->getDataFolder() . "Plotter.db");
+        self::$connection->query("
             CREATE TABLE IF NOT EXISTS plots(
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 plot_name TEXT, 
@@ -41,8 +41,6 @@ class DatabaseManager
                 plot_y2 INTEGER, 
                 plot_z2 INTEGER)
         ");
-
-        DatabaseManager::$connection = $database;
     }
 
     public function getPlugin()
