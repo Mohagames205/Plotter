@@ -9,7 +9,9 @@ use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotAddMemberCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotCreateCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotInfoCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotRemoveMemberCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotSetCategory;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotSetOwnerCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotWandCommand;
 use pocketmine\command\CommandSender;
@@ -25,6 +27,8 @@ class PlotCommand extends BaseCommand
         $this->registerSubCommand(new PlotRemoveMemberCommand("removemember", "Verwijderd de gegeven speler van het plot"));
         $this->registerSubCommand(new PlotCreateCommand("create", "Maakt een plot aan."));
         $this->registerSubCommand(new PlotWandCommand("wand", "Geeft jou een plotwand"));
+        $this->registerSubCommand(new PlotInfoCommand("info", "Toont info over het plot"));
+        $this->registerSubCommand(new PlotSetCategory("setcategory", "Stelt de plot categorie in"));
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
