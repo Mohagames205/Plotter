@@ -23,4 +23,9 @@ abstract class Session
         return self::$sessions[$player->getLowerCaseName()] ?? new PlotCreateSession($player);
     }
 
+    public static function destroySession(Player $player)
+    {
+        unset(self::$sessions[$player->getLowerCaseName()]);
+    }
+
 }
