@@ -29,9 +29,19 @@ class PlotCreateCommand extends \CortexPE\Commando\BaseSubCommand
     {
         $session = PlotCreateSession::getSession($sender);
 
-        if($session->isReady())
+        if(!$session->isReady())
         {
-            Plot::create($args["plot_name"], $session->getMinLocation(), $session->getMaxLocation(), $sender->getLevel(), BasicPlot::class);
+            $sender->sendMessage("§cGelieve eerst beide coordinaten in te stellen.");
         }
+
+        if(!is_null(Plot::getByName($args["plot_name"])))
+        {
+            $sender->sendMessage("§cEen plot met deze naam bestaat al!");
+            return;
+        }
+
+        Plot::create($args["plot_name"], $session->getMinLocation(), $session->getMaxLocation(), $sender->getLevel(), BasicPlot::class);
+        $sender->sendMessage("§aHet plot is succesvol aangemaakt");
+        $session->destroy();
     }
 }

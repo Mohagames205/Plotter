@@ -16,6 +16,8 @@ use pocketmine\Server;
 abstract class Plot
 {
 
+    private static $plotTypes;
+
     private int $id;
     private string $name;
     private ?string $owner;
@@ -44,6 +46,30 @@ abstract class Plot
         $this->maxMembers = $maxMembers;
 
         $this->id = $this->fetchId();
+    }
+
+    public static function registerPlotType(string $plotClass)
+    {
+        try {
+            $class = new \ReflectionClass($plotClass);
+
+            if(!in_array($plotClass, self::$plotTypes))
+            {
+                self::$plotTypes[] = $class->getName();
+            }
+        }
+
+        catch (\ReflectionException $exception)
+        {
+            Server::getInstance()->getLogger()->critical($plotClass . " does not exist and could not be registered");
+        }
+    }
+
+    public static function init()
+    {
+        self::registerPlotType(BuyPlot::class);
+        self::registerPlotType(BasicPlot::class);
+        self::registerPlotType(RentPlot::class);
     }
 
 
@@ -97,9 +123,9 @@ abstract class Plot
             plot_world = :world               
         ");
 
-        $x = $vector3->getX();
-        $y = $vector3->getY();
-        $z = $vector3->getZ();
+        $x = $vector3->getFloorX();
+        $y = $vector3->getFloorY();
+        $z = $vector3->getFloorZ();
 
         $statement->bindParam("x", $x);
         $statement->bindParam("y", $y);
@@ -113,9 +139,8 @@ abstract class Plot
 
     public static function getByName(string $name) : ?Plot
     {
-        $name = strtolower($name);
         $conn = DatabaseManager::getConnection();
-        $statement = $conn->prepare("SELECT * FROM plots WHERE plot_name = :name");
+        $statement = $conn->prepare("SELECT * FROM plots WHERE lower(plot_name) = lower(:name)");
         $statement->bindParam("name", $name);
         $result = $statement->execute();
 
@@ -274,10 +299,11 @@ abstract class Plot
         $statement->close();
     }
 
+
     public function removeMember(string $member) : bool
     {
         $member = strtolower($member);
-        if(!in_array($member, $this->members))
+        if(!in_array($member, $this->getMembers()))
         {
             return false;
         }
@@ -296,6 +322,15 @@ abstract class Plot
 
     }
 
+    public function reset() : void
+    {
+        $this->setOwner(null);
+        foreach ($this->getMembers() as $member)
+        {
+            $this->removeMember($member);
+        }
+    }
+
     public function delete() : void
     {
         $id = $this->getId();
@@ -310,7 +345,7 @@ abstract class Plot
         return $this->category;
     }
 
-    public function setCategory(string $category) : void
+    public function setCategory(?string $category) : void
     {
         $id = $this->getId();
 
@@ -341,9 +376,7 @@ abstract class Plot
         $jsonMembers = json_decode($result["plot_members"], true);
 
         /** @var Plot $plotType */;
-        return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_max_members"], $result["plot_price"], $result["plot_is_sold"], $result["plot_billing_period"]);
+        return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_max_members"], $result["plot_price"], $result["plot_is_buyable"], $result["plot_sell_price"]);
 
     }
-
-
 }

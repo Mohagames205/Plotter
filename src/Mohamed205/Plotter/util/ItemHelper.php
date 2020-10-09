@@ -27,6 +27,8 @@ class ItemHelper
     {
 
         $item = Item::get($this->wandId);
+        $nbt = $item->getNamedTag();
+        $nbt->setInt("wand_item", 1);
         $item->setLore([$this->lore]);
         $item->setCustomName($this->customName);
         return $item;
@@ -34,11 +36,7 @@ class ItemHelper
 
     public function isWandItem(Item $item) : bool
     {
-        $itemId = $item->getId();
-        $itemCustomName = $item->getCustomName();
-        $itemLore = $item->getLore()[0] ?? null;
-
-        return $itemId == $this->wandId && $itemCustomName == $this->customName && $itemLore == $this->lore;
+        return $item->getNamedTag()->getInt("wand_item", 0) == 1;
     }
 
 
