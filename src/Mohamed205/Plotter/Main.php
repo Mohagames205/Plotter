@@ -11,6 +11,8 @@ use Mohamed205\Plotter\listener\EventListener;
 use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\util\ItemHelper;
 use pocketmine\plugin\PluginBase;
+use twisted\multieconomy\Currency;
+use twisted\multieconomy\MultiEconomy;
 
 class Main extends PluginBase{
 
@@ -44,6 +46,11 @@ class Main extends PluginBase{
     public static function getItemHelper() : ItemHelper
     {
         return self::$itemHelper;
+    }
+
+    public static function getEco() : Currency
+    {
+        return MultiEconomy::getInstance()->getCurrency("euros");
     }
 
 
