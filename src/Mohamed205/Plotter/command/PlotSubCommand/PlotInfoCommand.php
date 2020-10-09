@@ -30,15 +30,16 @@ class PlotInfoCommand extends BaseSubCommand
             return;
         }
 
+        $members = $plot->getMembers();
         $plotName = $plot->getName();
-        $plotMembers = implode(", ", $plot->getMembers());
-        $plotOwner = $plot->getOwner();
-        $category = $plot->getCategory();
+        $plotMembers = empty($members) ? "Geen members" : implode(", ", $members);
+        $plotOwner = $plot->getOwner() ?? "Geen eigenaar";
+        $category = $plot->getCategory() ?? "Geen categorie";
 
-        $sender->sendMessage("§c$plotName");
+        $sender->sendMessage("§cNaam: §c$plotName");
         $sender->sendMessage("§cOwner: §4$plotOwner");
-        $sender->sendMessage("§cMembers: §4$plotMembers");
-        $sender->sendMessage("§cCategory: §4$category");
+        $sender->sendMessage("§cLeden: §4$plotMembers");
+        $sender->sendMessage("§cCategorie: §4$category");
 
     }
 }
