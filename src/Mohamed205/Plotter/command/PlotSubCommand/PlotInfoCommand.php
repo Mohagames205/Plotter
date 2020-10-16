@@ -54,7 +54,7 @@ class PlotInfoCommand extends BaseSubCommand
             $sender->sendMessage("§3§lGebruik §b/plot buy §3om dit plot te kopen");
         }
 
-        if(($plot instanceof BasicPlot && is_null($plot->getOwner()) || ($plot instanceof BuyPlot && !$plot->isBuyable() && !$plot->hasOwner() && !$plot->hasMembers())))
+        if(($plot instanceof BasicPlot && !$plot->hasOwner() && !$plot->hasMembers() || ($plot instanceof BuyPlot && !$plot->isBuyable() && !$plot->hasOwner() && !$plot->hasMembers())))
         {
             $sender->sendMessage("§3§lDit plot is niet te koop!");
         }
