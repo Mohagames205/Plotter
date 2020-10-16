@@ -39,6 +39,6 @@ class PlotQuickSellCommand extends BaseSubCommand
         }
 
         $plot->quickSell();
-        $sender->sendMessage(PlotCommand::$prefix . " §aHet plot is succesvol verkocht. U heeft " . $plot->getQuickSellPrice());
+        $sender->sendMessage(PlotCommand::$prefix . " §aHet plot is succesvol verkocht voor §2" . $plot->getQuickSellPrice() . " euro");
     }
 }
