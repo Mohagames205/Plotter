@@ -9,7 +9,7 @@ use Mohamed205\Plotter\database\DatabaseManager;
 
 class BasicPlot extends Plot
 {
-    public function convertToBuyPlot(?int $price, bool $isBuyable, ?int $playerSellPrice)
+    public function convertToBuyPlot(?int $price, bool $isBuyable, ?int $playerSellPrice) : BuyPlot
     {
         $id = $this->getId();
         $isBuyable = (int)$isBuyable;

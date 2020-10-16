@@ -139,7 +139,7 @@ class BuyPlot extends Plot
     /** TODO: LOGICA aanpassen */
     public function setOwner(?string $name): void
     {
-        $this->setBuyable(false);
+        $this->setBuyable(is_null($name));
         $this->setPlayerSellPrice(null);
         parent::setOwner($name);
     }
@@ -149,7 +149,7 @@ class BuyPlot extends Plot
         return $this->isBuyable;
     }
 
-    public function convertToBasicPlot()
+    public function convertToBasicPlot() : BasicPlot
     {
 
         $this->setPrice(null);
