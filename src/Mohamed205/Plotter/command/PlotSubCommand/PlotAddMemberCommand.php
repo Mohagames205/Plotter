@@ -52,6 +52,6 @@ class PlotAddMemberCommand extends BaseSubCommand
         }
 
         $plot->addMember($args["member"]);
-        $sender->sendMessage(PlotCommand::$prefix ." §aDe speler is al lid van het plot.");
+        $sender->sendMessage(PlotCommand::$prefix ." §aDe speler is succesvol toegevoegd aan het plot!");
     }
 }

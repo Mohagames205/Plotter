@@ -51,6 +51,6 @@ class PlotRemoveMemberCommand extends BaseSubCommand
         }
 
         $plot->removeMember($args["member"]);
-        $sender->sendMessage(PlotCommand::$prefix . " §aDe speler is succesvol toegevoegd.");
+        $sender->sendMessage(PlotCommand::$prefix . " §aDe speler is succesvol verwijderd van het plot.");
     }
 }
