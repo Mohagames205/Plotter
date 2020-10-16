@@ -4,6 +4,7 @@
 namespace Mohamed205\Plotter\member;
 
 
+use Exception;
 use pocketmine\Server;
 
 
@@ -19,14 +20,13 @@ class Member
 
     public function __construct(string $player)
     {
-        if(!Server::getInstance()->hasOfflinePlayerData($player))
-        {
-            throw new \Exception("Trying to create Member object from non-existing player");
+        if (!Server::getInstance()->hasOfflinePlayerData($player)) {
+            throw new Exception("Trying to create Member object from non-existing player");
         }
         $this->player = $player;
     }
 
-    public function getPlots() : array
+    public function getPlots(): array
     {
 
     }

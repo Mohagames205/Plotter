@@ -6,7 +6,6 @@ namespace Mohamed205\Plotter\plot;
 
 use Mohamed205\Plotter\database\DatabaseManager;
 use Mohamed205\Plotter\Main;
-use Mohamed205\Plotter\member\Member;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Server;
@@ -25,20 +24,17 @@ class BuyPlot extends Plot
         $this->playerSellPrice = $playerSellPrice;
 
         parent::__construct($name, $owner, $members, $minVector, $maxVector, $level, $category, $maxMembers);
-
     }
 
-    public function buy(string $player) : bool
+    public function buy(string $player): bool
     {
-        if(!$this->isBuyable() || !Server::getInstance()->hasOfflinePlayerData($player))
-        {
+        if (!$this->isBuyable() || !Server::getInstance()->hasOfflinePlayerData($player)) {
             return false;
         }
 
         $eco = Main::getEco();
 
-        if($this->isSellingByPlayer())
-        {
+        if ($this->isSellingByPlayer()) {
             $eco->removeFromBalance($player, $this->getPlayerSellPrice());
             $eco->addToBalance($this->getOwner(), $this->getPlayerSellPrice());
             $this->reset();
@@ -52,15 +48,18 @@ class BuyPlot extends Plot
         $eco->removeFromBalance($player, $this->getPrice());
         $this->setOwner($player);
         $this->setBuyable(false);
+        return true;
     }
 
-    public function getPrice() : ?int
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(int $price)
+    public function setPrice(?int $price)
     {
+        if (is_int($price) && $price < 0) return;
+
         $this->price = $price;
 
         $id = $this->getId();
@@ -73,7 +72,7 @@ class BuyPlot extends Plot
         $stmt->close();
     }
 
-    public function getPlayerSellPrice() : ?int
+    public function getPlayerSellPrice(): ?int
     {
         return $this->playerSellPrice;
     }
@@ -90,14 +89,35 @@ class BuyPlot extends Plot
         $stmt->execute();
     }
 
+    public function stopSellingByPlayer()
+    {
+        if ($this->isSellingByPlayer()) {
+            $this->setBuyable(false);
+            $this->setPlayerSellPrice(null);
+        }
+    }
+
     public function sell(int $price)
     {
         $this->setPlayerSellPrice($price);
         $this->setBuyable();
+        $this->removeAllMembers();
+    }
+
+    public function getQuickSellPrice(): int
+    {
+        $sellPercentage = Main::getInstance()->getConfig()->get("quicksell_percentage");
+        return $this->getPrice() * $sellPercentage / 100;
+
+    }
+
+    public function quickSell()
+    {
+        Main::getEco()->addToBalance($this->getOwner(), $this->getQuickSellPrice());
         $this->reset();
     }
 
-    public function isSellingByPlayer() : bool
+    public function isSellingByPlayer(): bool
     {
         return !is_null($this->getOwner()) && !is_null($this->getPlayerSellPrice()) && $this->isBuyable();
     }
@@ -105,23 +125,37 @@ class BuyPlot extends Plot
     public function setBuyable(bool $isBuyable = true)
     {
         $this->isBuyable = $isBuyable;
+
+        $isBuyable = (int)$isBuyable;
+
         $id = $this->getId();
         $conn = DatabaseManager::getConnection();
         $stmt = $conn->prepare("UPDATE plots SET plot_is_buyable = :buyable WHERE id = :plot_id");
         $stmt->bindParam("plot_id", $id);
-        var_dump($isBuyable);
-        var_dump($this->isBuyable());
         $stmt->bindParam("buyable", $isBuyable);
         $stmt->execute();
     }
 
-    public function isBuyable() : bool
+    /** TODO: LOGICA aanpassen */
+    public function setOwner(?string $name): void
+    {
+        $this->setBuyable(is_null($name));
+        $this->setPlayerSellPrice(null);
+        parent::setOwner($name);
+    }
+
+    public function isBuyable(): bool
     {
         return $this->isBuyable;
     }
 
-    public function convertToBasicPlot()
+    public function convertToBasicPlot() : BasicPlot
     {
+
+        $this->setPrice(null);
+        $this->setBuyable(false);
+        $this->setPlayerSellPrice(null);
+
         $id = $this->getId();
         $type = BasicPlot::class;
         $conn = DatabaseManager::getConnection();

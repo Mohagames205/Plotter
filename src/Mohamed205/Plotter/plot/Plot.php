@@ -5,13 +5,18 @@ namespace Mohamed205\Plotter\plot;
 
 
 use Mohamed205\Plotter\database\DatabaseManager;
-use Mohamed205\Plotter\Main;
-use Mohamed205\Plotter\member\Member;
+use Mohamed205\Plotter\event\PlotAddMemberEvent;
+use Mohamed205\Plotter\event\PlotDeleteEvent;
+use Mohamed205\Plotter\event\PlotRemoveMemberEvent;
+use Mohamed205\Plotter\event\PlotSetCategoryEvent;
+use Mohamed205\Plotter\event\PlotSetOwnerEvent;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
-use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\Server;
+use ReflectionClass;
+use ReflectionException;
+use SQLite3Result;
 
 abstract class Plot
 {
@@ -51,16 +56,12 @@ abstract class Plot
     public static function registerPlotType(string $plotClass)
     {
         try {
-            $class = new \ReflectionClass($plotClass);
+            $class = new ReflectionClass($plotClass);
 
-            if(!in_array($plotClass, self::$plotTypes))
-            {
+            if (!in_array($plotClass, self::$plotTypes)) {
                 self::$plotTypes[] = $class->getName();
             }
-        }
-
-        catch (\ReflectionException $exception)
-        {
+        } catch (ReflectionException $exception) {
             Server::getInstance()->getLogger()->critical($plotClass . " does not exist and could not be registered");
         }
     }
@@ -105,6 +106,20 @@ abstract class Plot
         $statement->bindParam("plot_z2", $maxZ);
 
         $statement->execute();
+
+    }
+
+    /**
+     * @param Position $position
+     * @return Plot|null
+     * @deprecated This function is for backwardscompatibility
+     */
+    public static function get(Position $position)
+    {
+        $level = $position->getLevel();
+        $vector3 = $position->asVector3();
+
+        return self::getAtVector($vector3, $level);
     }
 
     public static function getAtVector(Vector3 $vector3, Level $level)
@@ -134,10 +149,9 @@ abstract class Plot
         $result = $statement->execute();
 
         return self::fromDatabaseResult($result);
-
     }
 
-    public static function getByName(string $name) : ?Plot
+    public static function getByName(string $name): ?Plot
     {
         $conn = DatabaseManager::getConnection();
         $statement = $conn->prepare("SELECT * FROM plots WHERE lower(plot_name) = lower(:name)");
@@ -147,7 +161,7 @@ abstract class Plot
         return self::fromDatabaseResult($result);
     }
 
-    public static function getById(int $id) : ?Plot
+    public static function getById(int $id): ?Plot
     {
         $connection = DatabaseManager::getConnection();
 
@@ -158,23 +172,23 @@ abstract class Plot
         return self::fromDatabaseResult($result);
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getMinVector() : Vector3
+    public function getMinVector(): Vector3
     {
         return $this->minVector;
     }
 
-    public function getMaxVector() : Vector3
+    public function getMaxVector(): Vector3
     {
         return $this->maxVector;
     }
 
 
-    private function fetchId() : int
+    private function fetchId(): int
     {
         $conn = DatabaseManager::getConnection();
         $statement = $conn->prepare("SELECT id FROM plots WHERE 
@@ -211,33 +225,39 @@ abstract class Plot
         return $result["id"];
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getOwner() : ?string
+    public function getOwner(): ?string
     {
         return $this->owner;
     }
 
-    public function isOwner(string $player) : bool
+    public function isOwner(string $player): bool
     {
         return strtolower($player) == strtolower($this->getOwner());
     }
 
-    public function getMembers() : array
+    public function getMembers(): array
     {
         return $this->members;
     }
 
-    public function getLevel() : Level
+    public function getLevel(): Level
     {
         return $this->level;
     }
 
-    public function setOwner(?string $name) : void
+    public function setOwner(?string $name): void
     {
+        if (!is_null($name) && !Server::getInstance()->hasOfflinePlayerData($name)) return;
+
+        $ev = new PlotSetOwnerEvent($this, $name);
+        $ev->call();
+        if ($ev->isCancelled()) return;
+
         $id = $this->getId();
         $conn = DatabaseManager::getConnection();
 
@@ -248,14 +268,15 @@ abstract class Plot
         $statement->close();
     }
 
-    public function addMember(string $member) : bool
+    public function addMember(string $member): bool
     {
-
-
-        if(count($this->getMembers()) >= $this->getMaxMembers() || !Server::getInstance()->hasOfflinePlayerData($member))
-        {
+        if (count($this->getMembers()) >= $this->getMaxMembers() || !Server::getInstance()->hasOfflinePlayerData($member)) {
             return false;
         }
+
+        $ev = new PlotAddMemberEvent($this, $member);
+        $ev->call();
+        if ($ev->isCancelled()) return false;
 
         $id = $this->getId();
         $members = $this->getMembers();
@@ -276,18 +297,23 @@ abstract class Plot
 
     public function isMember(string $member)
     {
-        return in_array(strtolower($member), $this->members);
+        return in_array(strtolower($member), $this->getMembers());
     }
 
     /**
      * @return int
      */
-    public function getMaxMembers() : int
+    public function getMaxMembers(): int
     {
         return $this->maxMembers;
     }
 
-    public function setMaxMembers(int $amount) : void
+    public function hasOwner(): bool
+    {
+        return !is_null($this->getOwner());
+    }
+
+    public function setMaxMembers(int $amount): void
     {
         $id = $this->getId();
 
@@ -299,40 +325,57 @@ abstract class Plot
         $statement->close();
     }
 
+    public function hasMembers(): bool
+    {
+        return count($this->getMembers()) > 0;
+    }
 
-    public function removeMember(string $member) : bool
+
+    public function removeMember(string $member): bool
     {
         $member = strtolower($member);
-        if(!in_array($member, $this->getMembers()))
-        {
+        if (!in_array($member, $this->getMembers())) {
             return false;
         }
 
-        unset($this->members[$member]);
-        $members = $this->members;
+        $ev = new PlotRemoveMemberEvent($this, $member);
+        $ev->call();
+        if ($ev->isCancelled()) return false;
+
+        $old_members = $this->getMembers();
+        $this->members = array_diff($old_members, array($member));
+        $jsonMembers = json_encode($this->getMembers());
         $id = $this->getId();
 
         $conn = DatabaseManager::getConnection();
-        $statement = $conn->prepare("UPDATE plots SET plot_member = :members WHERE id = :id");
+        $statement = $conn->prepare("UPDATE plots SET plot_members = :members WHERE id = :id");
         $statement->bindParam("id", $id);
-        $statement->bindParam("members", $members);
+        $statement->bindParam("members", $jsonMembers);
         $statement->execute();
         $statement->close();
         return true;
 
     }
 
-    public function reset() : void
+    public function reset(): void
     {
         $this->setOwner(null);
-        foreach ($this->getMembers() as $member)
-        {
+        $this->removeAllMembers();
+    }
+
+    public function removeAllMembers(): void
+    {
+        foreach ($this->getMembers() as $member) {
             $this->removeMember($member);
         }
     }
 
-    public function delete() : void
+    public function delete(): void
     {
+        $ev = new PlotDeleteEvent($this);
+        $ev->call();
+        if ($ev->isCancelled()) return;
+
         $id = $this->getId();
         $conn = DatabaseManager::getConnection();
         $statement = $conn->prepare("DELETE FROM plots WHERE id = :id");
@@ -340,13 +383,17 @@ abstract class Plot
         $statement->execute();
     }
 
-    public function getCategory() : ?string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    public function setCategory(?string $category) : void
+    public function setCategory(?string $category): void
     {
+        $ev = new PlotSetCategoryEvent($this, $category);
+        $ev->call();
+        if ($ev->isCancelled()) return;
+
         $id = $this->getId();
 
         $conn = DatabaseManager::getConnection();
@@ -357,12 +404,12 @@ abstract class Plot
         $statement->close();
     }
 
-    protected static function fromDatabaseResult(\SQLite3Result $SQLite3Result) : ?Plot
+    protected static function fromDatabaseResult(SQLite3Result $SQLite3Result): ?Plot
     {
 
         $result = $SQLite3Result->fetchArray(SQLITE3_ASSOC);
 
-        if(!$result) return null;
+        if (!$result) return null;
 
         $plotType = $result["plot_type"];
 
@@ -373,9 +420,7 @@ abstract class Plot
 
         //$owner = is_null($result["plot_owner"]) ? null : new Member($result["plot_owner"]);
         $owner = $result["plot_owner"];
-        $jsonMembers = json_decode($result["plot_members"], true);
-
-        /** @var Plot $plotType */;
+        $jsonMembers = json_decode($result["plot_members"], true);/** @var Plot $plotType */
         return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_max_members"], $result["plot_price"], $result["plot_is_buyable"], $result["plot_sell_price"]);
 
     }

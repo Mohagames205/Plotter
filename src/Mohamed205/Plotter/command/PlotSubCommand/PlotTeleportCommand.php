@@ -9,8 +9,10 @@ use CortexPE\Commando\BaseSubCommand;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
+use pocketmine\level\Position;
+use pocketmine\Player;
 
-class PlotSetCategory extends BaseSubCommand
+class PlotTeleportCommand extends BaseSubCommand
 {
 
     /**
@@ -18,22 +20,23 @@ class PlotSetCategory extends BaseSubCommand
      */
     protected function prepare(): void
     {
-        $this->registerArgument(0, new RawStringArgument("category"));
-        $this->setPermission("plotter.admin.setcategory");
+        $this->setPermission("plotter.admin.teleport");
+        $this->registerArgument(0, new RawStringArgument("plot_name"));
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
-        $plot = Plot::getAtVector($sender, $sender->getLevel());
-        $category = $args["category"];
-
+        $plot = Plot::getByName($args["plot_name"]);
         if(is_null($plot))
         {
             $sender->sendMessage(PlotCommand::$prefix . " §cU staat niet op een plot!");
             return;
         }
 
-        $plot->setCategory($category);
-        $sender->sendMessage(PlotCommand::$prefix . " §aDe categorie van het plot is succesvol ingesteld.");
+        $minVector = $plot->getMinVector();
+        $pos = new Position($minVector->getX(), 256, $minVector->getZ(), $plot->getLevel());
+        /** @var Player $sender */
+        $sender->teleport($pos);
+
     }
 }

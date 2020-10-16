@@ -6,6 +6,7 @@ namespace Mohamed205\Plotter\command\PlotSubCommand;
 
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
+use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
@@ -28,30 +29,29 @@ class PlotAddMemberCommand extends BaseSubCommand
         $member = $args["member"];
         if(is_null($plot))
         {
-            $sender->sendMessage("§4U staat niet op een plot");
+            $sender->sendMessage(PlotCommand::$prefix ." §cU staat niet op een plot!");
             return;
         }
 
-        if(!$plot->isOwner($sender->getName()))
+        if(!$plot->isOwner($sender->getName()) && !$sender->hasPermission("plotter.admin.addmember"))
         {
-            $sender->sendMessage("§4U bent niet bevoegd om dit te doen!");
+            $sender->sendMessage(PlotCommand::$prefix ." §cU heeft geen toestemming om dit te doen!");
             return;
         }
 
         if(!Server::getInstance()->hasOfflinePlayerData($member))
         {
-            $sender->sendMessage("§4De opgegeven speler bestaat niet!");
+            $sender->sendMessage(PlotCommand::$prefix . " §cDe opgegeven speler bestaat niet");
             return;
         }
 
         if($plot->isMember($member))
         {
-            $sender->sendMessage("§4Deze speler is al lid van het plot!");
+            $sender->sendMessage(PlotCommand::$prefix . " §cDeze speler is al lid van het plot!");
+            return;
         }
 
         $plot->addMember($args["member"]);
-        $sender->sendMessage("§aDe speler is succesvol toegevoegd!");
-
-
+        $sender->sendMessage(PlotCommand::$prefix ." §aDe speler is succesvol toegevoegd aan het plot!");
     }
 }

@@ -4,7 +4,6 @@ namespace Mohamed205\Plotter\util;
 
 use Mohamed205\Plotter\Main;
 use pocketmine\item\Item;
-use pocketmine\item\ItemIds;
 
 class ItemHelper
 {
@@ -23,7 +22,7 @@ class ItemHelper
         $this->customName = $config->get("custom_name");
     }
 
-    public function getWandItem() : Item
+    public function getWandItem(): Item
     {
 
         $item = Item::get($this->wandId);
@@ -34,7 +33,7 @@ class ItemHelper
         return $item;
     }
 
-    public function isWandItem(Item $item) : bool
+    public function isWandItem(Item $item): bool
     {
         return $item->getNamedTag()->getInt("wand_item", 0) == 1;
     }
