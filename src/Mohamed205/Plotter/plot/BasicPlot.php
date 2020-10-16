@@ -5,15 +5,14 @@ namespace Mohamed205\Plotter\plot;
 
 
 use Mohamed205\Plotter\database\DatabaseManager;
-use Mohamed205\Plotter\member\Member;
-use pocketmine\level\Level;
-use pocketmine\math\Vector3;
+
 
 class BasicPlot extends Plot
 {
     public function convertToBuyPlot(?int $price, bool $isBuyable, ?int $playerSellPrice)
     {
         $id = $this->getId();
+        $isBuyable = (int)$isBuyable;
         $type = BuyPlot::class;
         $conn = DatabaseManager::getConnection();
         $stmt = $conn->prepare("UPDATE plots SET plot_type = :type, plot_price = :price, plot_sell_price = :sell_price, plot_is_buyable = :buyable WHERE id = :id");

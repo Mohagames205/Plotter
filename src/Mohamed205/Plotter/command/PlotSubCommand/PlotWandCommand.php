@@ -5,6 +5,7 @@ namespace Mohamed205\Plotter\command\PlotSubCommand;
 
 
 use CortexPE\Commando\BaseSubCommand;
+use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\Main;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
@@ -24,6 +25,6 @@ class PlotWandCommand extends BaseSubCommand
     {
         /** @var Player $sender */
         $sender->getInventory()->addItem(Main::getItemHelper()->getWandItem());
-        $sender->sendMessage("§au U heeft succesvol een wand ontvangen!");
+        $sender->sendMessage(PlotCommand::$prefix . " §aU heeft succesvol een plotwand ontvangen");
     }
 }

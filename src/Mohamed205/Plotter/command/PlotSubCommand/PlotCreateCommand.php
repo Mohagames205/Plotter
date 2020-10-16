@@ -5,6 +5,8 @@ namespace Mohamed205\Plotter\command\PlotSubCommand;
 
 
 use CortexPE\Commando\args\RawStringArgument;
+use CortexPE\Commando\BaseSubCommand;
+use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\plot\BasicPlot;
 use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\plot\RentPlot;
@@ -12,7 +14,7 @@ use Mohamed205\Plotter\session\PlotCreateSession;
 use Mohamed205\Plotter\session\Session;
 use pocketmine\command\CommandSender;
 
-class PlotCreateCommand extends \CortexPE\Commando\BaseSubCommand
+class PlotCreateCommand extends BaseSubCommand
 {
 
     /**
@@ -31,17 +33,17 @@ class PlotCreateCommand extends \CortexPE\Commando\BaseSubCommand
 
         if(!$session->isReady())
         {
-            $sender->sendMessage("§cGelieve eerst beide coordinaten in te stellen.");
+            $sender->sendMessage(PlotCommand::$prefix ." §cGelieve eerst beide coordinaten in te stellen");
         }
 
         if(!is_null(Plot::getByName($args["plot_name"])))
         {
-            $sender->sendMessage("§cEen plot met deze naam bestaat al!");
+            $sender->sendMessage(PlotCommand::$prefix . " §cDeze plotnaam is al bezet!");
             return;
         }
 
         Plot::create($args["plot_name"], $session->getMinLocation(), $session->getMaxLocation(), $sender->getLevel(), BasicPlot::class);
-        $sender->sendMessage("§aHet plot is succesvol aangemaakt");
+        $sender->sendMessage(PlotCommand::$prefix . " §aHet plot is succesvol aangemaakt!");
         $session->destroy();
     }
 }
