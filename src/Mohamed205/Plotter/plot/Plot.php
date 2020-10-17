@@ -21,7 +21,7 @@ use SQLite3Result;
 abstract class Plot
 {
 
-    private static $plotTypes;
+    private static array $plotTypes = [];
 
     private int $id;
     private string $name;
@@ -60,6 +60,7 @@ abstract class Plot
 
             if (!in_array($plotClass, self::$plotTypes)) {
                 self::$plotTypes[] = $class->getName();
+                Server::getInstance()->getLogger()->info($class->getName() . " has been registered");
             }
         } catch (ReflectionException $exception) {
             Server::getInstance()->getLogger()->critical($plotClass . " does not exist and could not be registered");
@@ -76,6 +77,11 @@ abstract class Plot
 
     public static function create(string $name, Vector3 $minVector, Vector3 $maxVector, Level $level, string $type = BuyPlot::class)
     {
+        if(!in_array($type, Plot::$plotTypes))
+        {
+            throw new \InvalidArgumentException("This plottype is not registered and does not exist.");
+        }
+
         $conn = DatabaseManager::getConnection();
         $members = json_encode([]);
         $world = $level->getFolderName();
@@ -422,6 +428,24 @@ abstract class Plot
         $owner = $result["plot_owner"];
         $jsonMembers = json_decode($result["plot_members"], true);/** @var Plot $plotType */
         return new $plotType($result["plot_name"], $owner, $jsonMembers, $minVector, $maxVector, $level, $result["plot_category"], $result["plot_max_members"], $result["plot_price"], $result["plot_is_buyable"], $result["plot_sell_price"]);
+
+    }
+
+    protected function convertTo(string $type) : Plot
+    {
+        if(!in_array($type, Plot::$plotTypes))
+        {
+            throw new \InvalidArgumentException("This plottype is not registered and does not exist.");
+        }
+
+        $conn = DatabaseManager::getConnection();
+        $id = $this->getId();
+
+        $stmt = $conn->prepare("UPDATE plots SET plot_type = :type WHERE id = :id");
+        $stmt->bindParam("type", $type);
+        $stmt->bindParam("id", $id);
+        $stmt->execute();
+        $stmt->close();
 
     }
 }

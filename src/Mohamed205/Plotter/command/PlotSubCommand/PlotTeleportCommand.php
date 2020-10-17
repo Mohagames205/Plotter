@@ -29,7 +29,7 @@ class PlotTeleportCommand extends BaseSubCommand
         $plot = Plot::getByName($args["plot_name"]);
         if(is_null($plot))
         {
-            $sender->sendMessage(PlotCommand::$prefix . " §cU staat niet op een plot!");
+            $sender->sendMessage(PlotCommand::$prefix . " §cDit plot bestaat niet!");
             return;
         }
 
