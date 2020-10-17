@@ -6,6 +6,7 @@ use CortexPE\Commando\PacketHooker;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\database\DatabaseManager;
 use Mohamed205\Plotter\listener\EventListener;
+use Mohamed205\Plotter\listener\LevelEventListener;
 use Mohamed205\Plotter\listener\PlotEventListener;
 use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\util\ItemHelper;
@@ -34,7 +35,15 @@ class Main extends PluginBase{
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getPluginManager()->registerEvents(new PlotEventListener(), $this);
+
+        if($this->getServer()->getPluginManager()->getPlugin("LevelAPI"))
+        {
+            $this->getServer()->getPluginManager()->registerEvents(new LevelEventListener(), $this);
+        }
+
+
         (new DatabaseManager($this))->initDatabase();
+        Plot::init();
         
     }
 
