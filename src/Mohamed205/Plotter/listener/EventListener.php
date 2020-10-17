@@ -4,6 +4,7 @@
 namespace Mohamed205\Plotter\listener;
 
 
+use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\Main;
 use Mohamed205\Plotter\session\PlotCreateSession;
 use pocketmine\event\block\BlockBreakEvent;
@@ -22,7 +23,7 @@ class EventListener implements Listener
             $session->setFirstLocation($e->getBlock()->asVector3());
             $e->setCancelled();
 
-            $player->sendMessage("§f[§cTDBJail§f] §aEerste locatie geselecteerd");
+            $player->sendMessage(PlotCommand::$prefix . " §aEerste locatie geselecteerd");
         }
     }
 
@@ -34,7 +35,7 @@ class EventListener implements Listener
             $session->setSecondLocation($e->getBlock()->asVector3());
             $e->setCancelled();
 
-            $player->sendMessage("§f[§cTDBJail§f] §aTweede locatie geselecteerd.");
+            $player->sendMessage(PlotCommand::$prefix . " §aTweede locatie geselecteerd.");
         }
     }
 
