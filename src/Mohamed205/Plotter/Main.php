@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Mohamed205\Plotter;
 
 use CortexPE\Commando\PacketHooker;
