@@ -8,7 +8,7 @@ use Mohamed205\Plotter\plot\Plot;
 class PlotCreateEvent extends PlotEvent
 {
 
-    protected Plot $plot;
+    protected $plot;
 
     public function __construct(Plot $plot)
     {

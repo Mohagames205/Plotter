@@ -16,7 +16,7 @@ use pocketmine\Server;
 class Member
 {
 
-    private string $player;
+    private $player;
 
     public function __construct(string $player)
     {

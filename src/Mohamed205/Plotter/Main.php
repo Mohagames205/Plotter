@@ -18,8 +18,8 @@ use twisted\multieconomy\MultiEconomy;
 
 class Main extends PluginBase{
 
-    private static Main $instance;
-    private static ItemHelper $itemHelper;
+    private static $instance;
+    private static $itemHelper;
 
     public function onEnable()
     {

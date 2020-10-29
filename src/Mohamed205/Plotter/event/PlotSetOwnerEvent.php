@@ -9,8 +9,8 @@ use pocketmine\event\Cancellable;
 class PlotSetOwnerEvent extends PlotEvent implements Cancellable
 {
 
-    protected ?string $owner;
-    protected Plot $plot;
+    protected $owner;
+    protected $plot;
 
     public function __construct(Plot $plot, ?string $owner)
     {

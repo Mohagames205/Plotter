@@ -23,18 +23,18 @@ abstract class Plot
 
     private static array $plotTypes = [];
 
-    private int $id;
-    private string $name;
-    private ?string $owner;
-    private Level $level;
+    private $id;
+    private $name;
+    private $owner;
+    private $level;
 
-    private Vector3 $minVector;
-    private Vector3 $maxVector;
+    private $minVector;
+    private $maxVector;
 
-    private ?string $category;
+    private $category;
 
-    private array $members;
-    private int $maxMembers;
+    private $members;
+    private $maxMembers;
 
     public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, int $maxMembers, ...$args)
     {
@@ -71,7 +71,6 @@ abstract class Plot
     {
         self::registerPlotType(BuyPlot::class);
         self::registerPlotType(BasicPlot::class);
-        self::registerPlotType(RentPlot::class);
     }
 
 
@@ -431,7 +430,7 @@ abstract class Plot
 
     }
 
-    protected function convertTo(string $type) : Plot
+    public static function convertPlotTo(Plot $plot, string $type) : Plot
     {
         if(!in_array($type, Plot::$plotTypes))
         {
@@ -439,7 +438,7 @@ abstract class Plot
         }
 
         $conn = DatabaseManager::getConnection();
-        $id = $this->getId();
+        $id = $plot->getId();
 
         $stmt = $conn->prepare("UPDATE plots SET plot_type = :type WHERE id = :id");
         $stmt->bindParam("type", $type);

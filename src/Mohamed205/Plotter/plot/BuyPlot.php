@@ -13,9 +13,9 @@ use pocketmine\Server;
 class BuyPlot extends Plot
 {
 
-    private ?int $price;
-    private bool $isBuyable;
-    private ?int $playerSellPrice;
+    private $price;
+    private $isBuyable;
+    private $playerSellPrice;
 
     public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, int $maxMembers, ?int $price, bool $isBuyable, ?int $playerSellPrice)
     {

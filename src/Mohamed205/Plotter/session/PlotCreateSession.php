@@ -13,10 +13,10 @@ class PlotCreateSession extends Session
 
     use Math;
 
-    private Player $player;
+    private $player;
 
-    private Vector3 $firstLocation;
-    private Vector3 $secondLocation;
+    private $firstLocation;
+    private $secondLocation;
 
     public function __construct(Player $player)
     {

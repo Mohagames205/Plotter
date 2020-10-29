@@ -10,8 +10,8 @@ use pocketmine\math\Vector3;
 class RentPlot extends Plot
 {
 
-    private ?int $price;
-    private bool $isBuyable;
+    private $price;
+    private $isBuyable;
 
 
     public function __construct(string $name, ?string $owner, array $members, Vector3 $minVector, Vector3 $maxVector, Level $level, ?string $category, int $maxMembers, ?int $price, bool $isBuyable)
@@ -22,6 +22,17 @@ class RentPlot extends Plot
         parent::__construct($name, $owner, $members, $minVector, $maxVector, $level, $category, $maxMembers);
 
     }
+
+    public function isBuyable() : bool
+    {
+        return $this->isBuyable;
+    }
+
+    public function getPrice() : ?int
+    {
+        return $this->price;
+    }
+    
 
 
 }
