@@ -3,6 +3,7 @@
 namespace Mohamed205\Plotter;
 
 use CortexPE\Commando\PacketHooker;
+use Mohamed205\PlotSigns\command\PlotSubCommand\PlotSignCommand;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\database\DatabaseManager;
 use Mohamed205\Plotter\listener\EventListener;
@@ -10,6 +11,7 @@ use Mohamed205\Plotter\listener\LevelEventListener;
 use Mohamed205\Plotter\listener\PlotEventListener;
 use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\util\ItemHelper;
+use Mohamed205\Plotter\util\Module;
 use pocketmine\plugin\PluginBase;
 use twisted\multieconomy\Currency;
 use twisted\multieconomy\MultiEconomy;
@@ -31,7 +33,9 @@ class Main extends PluginBase{
 
         $this->saveDefaultConfig();
 
-        $this->getServer()->getCommandMap()->register("plotter", new PlotCommand($this, "plot", "De Plot basecommand"));
+        $plotCommand = new PlotCommand($this, "plot", "De Plot basecommand");
+        $this->getServer()->getCommandMap()->register("plotter", $plotCommand);
+        Module::setCommandMap($plotCommand);
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getPluginManager()->registerEvents(new PlotEventListener(), $this);

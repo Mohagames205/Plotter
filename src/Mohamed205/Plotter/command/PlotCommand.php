@@ -22,6 +22,7 @@ use Mohamed205\Plotter\command\PlotSubCommand\PlotSetPriceCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotStopSellCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotTeleportCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotWandCommand;
+use Mohamed205\Plotter\util\Module;
 use pocketmine\command\CommandSender;
 
 class PlotCommand extends BaseCommand
