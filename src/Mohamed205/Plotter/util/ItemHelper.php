@@ -8,10 +8,10 @@ use pocketmine\item\Item;
 class ItemHelper
 {
 
-    private Main $plugin;
-    private int $wandId;
-    private string $lore;
-    private string $customName;
+    private $plugin;
+    private $wandId;
+    private $lore;
+    private $customName;
 
     public function __construct(Main $plugin)
     {

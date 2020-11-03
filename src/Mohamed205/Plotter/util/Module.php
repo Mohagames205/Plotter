@@ -11,10 +11,10 @@ use pocketmine\plugin\Plugin;
 class Module
 {
 
-    private static BaseCommand $commandMap;
-    private static array $loadedModules = [];
-    private Plugin $module;
-    private array $subcommands = [];
+    private static $commandMap = null;
+    private static $loadedModules = [];
+    private $module;
+    private $subcommands = [];
 
     public function __construct(Plugin $module)
     {

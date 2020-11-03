@@ -9,8 +9,8 @@ use pocketmine\event\Cancellable;
 class PlotAddMemberEvent extends PlotEvent implements Cancellable
 {
 
-    protected string $member;
-    protected Plot $plot;
+    protected $member;
+    protected $plot;
 
     public function __construct(Plot $plot, string $member)
     {

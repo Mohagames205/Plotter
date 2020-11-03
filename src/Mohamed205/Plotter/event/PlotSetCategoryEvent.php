@@ -9,8 +9,8 @@ use pocketmine\event\Cancellable;
 class PlotSetCategoryEvent extends PlotEvent implements Cancellable
 {
 
-    protected ?string $category;
-    protected Plot $plot;
+    protected $category;
+    protected $plot;
 
     public function __construct(Plot $plot, ?string $category)
     {

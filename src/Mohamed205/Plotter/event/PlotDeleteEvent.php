@@ -9,7 +9,7 @@ use pocketmine\event\Cancellable;
 class PlotDeleteEvent extends PlotEvent implements Cancellable
 {
 
-    protected Plot $plot;
+    protected $plot;
 
     public function __construct(Plot $plot)
     {

@@ -48,7 +48,7 @@ trait ArgumentableTrait {
 	private $requiredArgumentCount = [];
 
 	/**
-	 * This is where all the arguments, permissions, sub-commands, etc would be registered
+	 * This is where all the arguments, permissions, sub-command, etc would be registered
 	 */
 	abstract protected function prepare(): void;
 
