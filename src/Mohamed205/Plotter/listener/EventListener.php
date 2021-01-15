@@ -18,6 +18,7 @@ class EventListener implements Listener
     {
         if(Main::getItemHelper()->isWandItem($e->getItem()))
         {
+            var_dump("ibebnnerngongnerngenn");
             $player = $e->getPlayer();
             $session = PlotCreateSession::getSession($player);
             $session->setFirstLocation($e->getBlock()->asVector3());
@@ -30,6 +31,7 @@ class EventListener implements Listener
     public function onSecondPosition(PlayerInteractEvent $e) : void
     {
         if ($e->getAction() == PlayerInteractEvent::RIGHT_CLICK_BLOCK && Main::getItemHelper()->isWandItem($e->getItem())) {
+            var_dump("NFZELFNEONFONEROFNER");
             $player = $e->getPlayer();
             $session = PlotCreateSession::getSession($player);
             $session->setSecondLocation($e->getBlock()->asVector3());

@@ -8,7 +8,7 @@ use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\BaseSubCommand;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\plot\BasicPlot;
-use Mohamed205\Plotter\plot\BuyPlot;
+use Mohamed205\Plotter\plot\EconomyPlot;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
 
@@ -34,7 +34,7 @@ class PlotSetPriceCommand extends BaseSubCommand
             return;
         }
 
-        if($plot instanceof BuyPlot)
+        if($plot instanceof EconomyPlot)
         {
             if($args["plot_price"] == 0)
             {

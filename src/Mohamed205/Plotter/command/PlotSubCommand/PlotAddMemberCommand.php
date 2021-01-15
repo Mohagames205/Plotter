@@ -9,7 +9,6 @@ use CortexPE\Commando\BaseSubCommand;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 use pocketmine\Server;
 
 class PlotAddMemberCommand extends BaseSubCommand

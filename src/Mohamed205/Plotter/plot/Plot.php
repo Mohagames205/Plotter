@@ -166,6 +166,31 @@ abstract class Plot
         return self::fromDatabaseResult($result);
     }
 
+    public static function getByType(string $type)
+    {
+        if(!in_array($type, Plot::$plotTypes))
+        {
+            throw new \InvalidArgumentException("This plottype is not registered and does not exist.");
+        }
+
+        $db = DatabaseManager::getConnection();
+        $statement = $db->prepare("SELECT * FROM plots WHERE plot_type = :type");
+        $statement->bindParam("type", $type);
+        $result = $statement->execute();
+
+        $plots = [];
+        while ($row = $result->fetchArray())
+        {
+            $plot = self::getById($row["id"]);
+            if(!is_null($plot))
+            {
+                $plots[] = $plot;
+            }
+        }
+
+        return $plots;
+    }
+
     public static function getById(int $id): ?Plot
     {
         $connection = DatabaseManager::getConnection();
@@ -430,7 +455,7 @@ abstract class Plot
 
     }
 
-    public static function convertPlotTo(Plot $plot, string $type) : Plot
+    public static function convertPlotTo(Plot $plot, string $type)
     {
         if(!in_array($type, Plot::$plotTypes))
         {

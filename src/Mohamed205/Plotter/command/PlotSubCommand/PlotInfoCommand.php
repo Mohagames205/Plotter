@@ -10,7 +10,6 @@ use Mohamed205\Plotter\plot\BasicPlot;
 use Mohamed205\Plotter\plot\BuyPlot;
 use Mohamed205\Plotter\plot\Plot;
 use pocketmine\command\CommandSender;
-use pocketmine\utils\TextFormat;
 
 class PlotInfoCommand extends BaseSubCommand
 {

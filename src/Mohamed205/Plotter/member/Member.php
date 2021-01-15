@@ -31,6 +31,11 @@ class Member
 
     }
 
+    public static function exists(string $player)
+    {
+        return Server::getInstance()->hasOfflinePlayerData($player);
+    }
+
     public function getOfflinePlayer()
     {
         return Server::getInstance()->getOfflinePlayer($this->player);
