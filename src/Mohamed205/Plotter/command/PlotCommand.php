@@ -28,7 +28,7 @@ use pocketmine\command\CommandSender;
 class PlotCommand extends BaseCommand
 {
 
-    public static string $prefix = "§7[§aPlot§2ter§7]";
+    public static $prefix = "§7[§aPlot§2ter§7]";
 
     protected function prepare(): void
     {
