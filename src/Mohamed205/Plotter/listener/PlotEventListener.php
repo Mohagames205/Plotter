@@ -30,6 +30,7 @@ class PlotEventListener implements Listener
             if (!is_null($plot)) {
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$player->hasPermission("plotter.admin.bypass")) {
                     $player->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 1 ");
                     $e->setCancelled();
                 }
             }
@@ -46,6 +47,7 @@ class PlotEventListener implements Listener
                 $player = $e->getPlayer();
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$player->hasPermission("plotter.admin.bypass")) {
                     $player->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 2 ");
                     $e->setCancelled();
                 }
             }
@@ -61,6 +63,7 @@ class PlotEventListener implements Listener
             if (!is_null($plot)) {
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$player->hasPermission("plotter.admin.bypass")) {
                     $player->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 3 ");
                     $e->setCancelled();
                 }
             }
@@ -76,6 +79,7 @@ class PlotEventListener implements Listener
             if (!is_null($plot)) {
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$player->hasPermission("plotter.admin.bypass")) {
                     $player->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 4 ");
                     $e->setCancelled();
                 }
             }
@@ -92,12 +96,14 @@ class PlotEventListener implements Listener
                 if ($e->getAction() == PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
                     if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$player->hasPermission("plotter.admin.bypass")) {
                         $player->sendPopup("§4U kan deze actie niet uitvoeren.");
+                        var_dump("CHEST ERROR 5 ");
                         $e->setCancelled();
                         return;
                     }
                 }
                 if ($e->getAction() == PlayerInteractEvent::LEFT_CLICK_BLOCK && !$player->hasPermission("plotter.admin.bypass")) {
                     $e->getPlayer()->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 6 ");
                     $e->setCancelled();
                 }
             }
@@ -111,6 +117,7 @@ class PlotEventListener implements Listener
             if (!is_null($plot)) {
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$e->getPlayer()->hasPermission("plotter.admin.bypass")) {
                     $e->getPlayer()->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 7 ");
                     $e->setCancelled();
                     return;
                 }
@@ -126,6 +133,7 @@ class PlotEventListener implements Listener
                 return;
             }
             if ($e->getEntity() instanceof ArmorStand && !$damager->hasPermission("pa.staff.interactbypass")) {
+                var_dump("CHEST ERROR 8 ");
                 $damager->sendPopup("§4U kan deze actie niet uitvoeren.");
                 $e->setCancelled();
             }
@@ -140,6 +148,7 @@ class PlotEventListener implements Listener
             if (!is_null($plot)) {
                 if (!$plot->isMember($e->getPlayer()) && $plot->isOwner($e->getPlayer()) && !$e->getPlayer()->hasPermission("plotter.admin.bypass")) {
                     $e->getPlayer()->sendPopup("§4U kan deze actie niet uitvoeren.");
+                    var_dump("CHEST ERROR 9 ");
                     $e->setCancelled();
                     return;
                 }

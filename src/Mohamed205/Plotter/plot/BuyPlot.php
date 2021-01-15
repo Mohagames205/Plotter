@@ -10,7 +10,7 @@ use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Server;
 
-class BuyPlot extends Plot
+class BuyPlot extends Plot implements EconomyPlot
 {
 
     private $price;

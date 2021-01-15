@@ -4,8 +4,6 @@
 namespace Mohamed205\Plotter\command;
 
 
-use CortexPE\Commando\args\BaseArgument;
-use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotAddMemberCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotBuyCommand;
@@ -14,6 +12,7 @@ use Mohamed205\Plotter\command\PlotSubCommand\PlotDebugCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotDeleteCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotInfoCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotPriceCommand;
+use Mohamed205\Plotter\command\PlotSubCommand\PlotQuickSellCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotRemoveMemberCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotSellCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotSetCategory;
@@ -22,7 +21,6 @@ use Mohamed205\Plotter\command\PlotSubCommand\PlotSetPriceCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotStopSellCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotTeleportCommand;
 use Mohamed205\Plotter\command\PlotSubCommand\PlotWandCommand;
-use Mohamed205\Plotter\util\Module;
 use pocketmine\command\CommandSender;
 
 class PlotCommand extends BaseCommand
@@ -40,6 +38,7 @@ class PlotCommand extends BaseCommand
         $this->registerSubCommand(new PlotWandCommand("wand", "Geeft jou een plotwand"));
         $this->registerSubCommand(new PlotInfoCommand("info", "Toont info over het plot"));
         $this->registerSubCommand(new PlotSetCategory("setcategory", "Stelt de plot categorie in"));
+        $this->registerSubCommand(new PlotQuickSellCommand("quicksell", "Plot snel verkopen"));
         $this->registerSubCommand(new PlotBuyCommand("buy", "Koop het plot als het beschikbaar is!"));
         $this->registerSubCommand(new PlotSetPriceCommand("setprice", "Stelt de prijs van het plot in"));
         $this->registerSubCommand(new PlotSellCommand("sell", "Verkoop je plot!"));

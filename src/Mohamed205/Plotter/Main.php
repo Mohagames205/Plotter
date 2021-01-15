@@ -3,9 +3,10 @@
 namespace Mohamed205\Plotter;
 
 use CortexPE\Commando\PacketHooker;
-use Mohamed205\PlotSigns\command\PlotSubCommand\PlotSignCommand;
 use Mohamed205\Plotter\command\PlotCommand;
 use Mohamed205\Plotter\database\DatabaseManager;
+use Mohamed205\Plotter\economy\EconomyApi;
+use Mohamed205\Plotter\economy\EconomyProvider;
 use Mohamed205\Plotter\listener\EventListener;
 use Mohamed205\Plotter\listener\LevelEventListener;
 use Mohamed205\Plotter\listener\PlotEventListener;
@@ -13,8 +14,6 @@ use Mohamed205\Plotter\plot\Plot;
 use Mohamed205\Plotter\util\ItemHelper;
 use Mohamed205\Plotter\util\Module;
 use pocketmine\plugin\PluginBase;
-use twisted\multieconomy\Currency;
-use twisted\multieconomy\MultiEconomy;
 
 class Main extends PluginBase{
 
@@ -40,10 +39,12 @@ class Main extends PluginBase{
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getPluginManager()->registerEvents(new PlotEventListener(), $this);
 
+        /*
         if($this->getServer()->getPluginManager()->getPlugin("LevelAPI"))
         {
             $this->getServer()->getPluginManager()->registerEvents(new LevelEventListener(), $this);
         }
+        */
 
 
         (new DatabaseManager($this))->initDatabase();
@@ -61,9 +62,9 @@ class Main extends PluginBase{
         return self::$itemHelper;
     }
 
-    public static function getEco() : Currency
+    public static function getEco() : EconomyProvider
     {
-        return MultiEconomy::getInstance()->getCurrency("euros");
+        return new EconomyApi(\onebone\economyapi\EconomyAPI::getInstance());
     }
 
 
